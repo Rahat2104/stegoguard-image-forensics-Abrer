@@ -1,11 +1,8 @@
-name: StegoGuard Image Forensics
+name: StegoGuard URL Image Scan
 
 on:
   push:
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   image-forensics:
@@ -15,26 +12,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show lab mode
-        run: cat lab_mode.txt
+      - name: Create images folder
+        run: mkdir -p images
 
-      - name: Create demo image
-        run: python make_demo_image.py
-
-      - name: Save generated image into repository
+      - name: Download image from link
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add images/student_image.png
-          git commit -m "Save generated image [skip ci]" || echo "No image changes to commit"
-          git push
-
-      - name: Upload generated image as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-stegoguard-image
-          path: images/student_image.png
-          retention-days: 30
+          curl -L "https://share.google/RR1lQToK7B0RCYfKE" -o images/url_image.jpg
+          ls -lh images
+          file images/url_image.jpg
 
       - name: Run StegoGuard scanner
         run: python scanner.py

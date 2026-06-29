@@ -12,12 +12,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create images folder
-        run: mkdir -p images
-
-      - name: Download image from link
+      - name: Prepare images folder
         run: |
-          curl -L "https://share.google/RR1lQToK7B0RCYfKE" -o images/url_image.jpg
+          mkdir -p images
+          rm -f images/*
+
+      - name: Download image from URL
+        run: |
+          curl -fL "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyNtszXR0k_IRff9aXPylipo3l-I-8vzopNP9FFobi3VkQCxSpXqbABdc6&s=10" -o images/url_image.jpg
           ls -lh images
           file images/url_image.jpg
 

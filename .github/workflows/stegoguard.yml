@@ -19,5 +19,12 @@ jobs:
       - name: Create demo image
         run: python make_demo_image.py
 
+      - name: Save generated image
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-stegoguard-image
+          path: images/student_image.png
+          retention-days: 30
+
       - name: Run StegoGuard scanner
         run: python scanner.py

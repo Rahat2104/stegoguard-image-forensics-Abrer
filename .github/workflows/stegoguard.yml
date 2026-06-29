@@ -14,14 +14,28 @@ jobs:
 
       - name: Prepare images folder
         run: |
+          rm -rf images
           mkdir -p images
-          rm -f images/*
 
       - name: Download image from URL
         run: |
-          curl -fL "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyNtszXR0k_IRff9aXPylipo3l-I-8vzopNP9FFobi3VkQCxSpXqbABdc6&s=10" -o images/url_image.jpg
-          ls -lh images
-          file images/url_image.jpg
+          curl -fL -A "Mozilla/5.0" "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyNtszXR0k_IRff9aXPylipo3l-I-8vzopNP9FFobi3VkQCxSpXqbABdc6&s=10" -o downloaded_image
+          file downloaded_image
+
+      - name: Convert downloaded image to PNG
+        run: |
+          python -m pip install pillow
+          python - <<'PY'
+          from PIL import Image
+
+          img = Image.open("downloaded_image")
+          img.save("images/url_image.png")
+
+          print("Converted image successfully")
+          print("Image format:", img.format)
+          print("Image size:", img.size)
+          PY
+          file images/url_image.png
 
       - name: Run StegoGuard scanner
         run: python scanner.py
